@@ -1,15 +1,15 @@
+AddCSLuaFile()
 if SERVER then
-  AddCSLuaFile()
-  resource.AddFile()
+  resource.AddFile("materials/vgui/ttt/dynamic/roles/icon_dop.vmt")
 end
 
 roles.InitCustomTeam(ROLE.name, {
-  icon = "",
-  color = Color()
+    icon = "materials/vgui/ttt/dynamic/roles/icon_dop.vmt",
+    color = Color(132, 50, 191, 255)
 })
 
 function ROLE:PreInitialize()
-  self.color = Color()
+  self.color = Color(132, 50, 191, 255)
 
   self.abbr = "dop"
   self.surviveBonus = 1
@@ -29,9 +29,8 @@ function ROLE:PreInitialize()
 end
 
 function ROLE:Initialize()
-
-end
-
-if SERVER then
-  
+  roles.SetBaseRole(self, ROLE_MIMIC)
+  if SERVER and JESTER then
+    self.networkRoles = {JESTER}
+  end
 end
