@@ -1,8 +1,6 @@
 local function DoppelChange(ply, key)
   if not DOPPELGANGER then return end
-
   if not IsValid(ply) or not ply:IsPlayer() then return end
-
   if ply:GetSubRole() ~= ROLE_MIMIC and ply:GetSubRole() ~= ROLE_DOPPELGANGER then return end
 
   if key ~= IN_USE then return end

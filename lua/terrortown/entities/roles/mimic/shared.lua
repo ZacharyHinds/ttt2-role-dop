@@ -12,7 +12,7 @@ function ROLE:PreInitialize()
   self.scoreTeamKillsMultiplier = -16
 
   self.defaultTeam = TEAM_NONE
-  self.defaultEquipment = DEFAULT_LOADOUT
+  self.defaultEquipment = SPECIAL_EQUIPMENT
 
   self.conVarData = {
     pct = 0.13,
