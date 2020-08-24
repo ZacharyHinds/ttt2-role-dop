@@ -14,13 +14,18 @@ local function DoppelChange(ply, key)
 
   local new_role = tgt:GetSubRole()
   local new_team = tgt:GetTeam()
+  local did_steal = true
 
   if ply:GetSubRole() == ROLE_DOPPELGANGER then
     new_team = TEAM_DOPPELGANGER
   end
 
-  ply:SetRole(new_role, new_team)
+  new_role, new_team, did_steal = hook.Run("TTT2DoppelgangerRoleChange", ply, new_role, new_team, did_steal)
 
+  ply:SetRole(new_role, new_team)
+  SendFullStateUpdate()
+
+  if not did_steal then return end
   local steal_mode = GetConVar("ttt2_dop_steal_role")
 
   if steal_mode and AMNESIAC then
@@ -47,3 +52,28 @@ local function DoppelChange(ply, key)
 end
 
 hook.Add("KeyPress", "TTT2DoppelChange", DoppelChange)
+
+local function DoppelMarker(ply, new_role, new_team, did_steal)
+  if not MARKER then return end
+  if not IsValid(ply) or ply:IsSpec() or not ply:Alive() then return end
+  if ply:GetSubRole() ~= ROLE_DOPPELGANGER and ply:GetSubRole() ~= ROLE_MIMIC then return end
+  if new_role ~= ROLE_MARKER then return end
+  did_steal = false
+
+  if AMNESIAC then
+    new_role = ROLE_AMNESIAC
+    new_team = TEAM_NONE
+  elseif UNKNOWN then
+    new_role = ROLE_UNKNOWN
+    new_team = TEAM_NONE
+  else
+    new_role = ROLE_INNOCENT
+    new_team = TEAM_INNOCENT
+  end
+
+  if MARKER_DATA then MARKER_DATA:SetMarkedPlayer(ply) end
+
+  return new_role, new_team, did_steal
+end
+
+hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelMarker", DoppelMarker)
