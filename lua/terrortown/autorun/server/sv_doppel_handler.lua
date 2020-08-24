@@ -1,3 +1,4 @@
+util.AddNetworkString("ttt2_dop_popup")
 local function DoppelChange(ply, key)
   if not DOPPELGANGER then return end
   if not IsValid(ply) or not ply:IsPlayer() then return end
@@ -20,9 +21,29 @@ local function DoppelChange(ply, key)
 
   ply:SetRole(new_role, new_team)
 
-  if GetConVar("ttt2_doppel_steal_role"):GetBool() and AMNESIAC then
+  local steal_mode = GetConVar("ttt2_dop_steal_role")
+
+  if steal_mode and AMNESIAC then
     tgt:SetRole(ROLE_AMNESIAC, TEAM_NONE)
   end
+  SendFullStateUpdate()
+
+  local popup_mode = GetConVar("ttt2_dop_declare_mode")
+
+  if popup_mode == 1 or (popup_mode ~= 2 and steal_mode) then
+    net.Start("ttt2_dop_popup")
+    net.WriteEntity(tgt)
+    net.WriteEntity(ply)
+    net.WriteBool(steal_mode)
+    net.Send(tgt)
+  elseif popup_mode == 2 then
+    net.Start("ttt2_dop_popup")
+    net.WriteEntity(tgt)
+    net.WriteEntity(ply)
+    net.WriteBool(steal_mode)
+    net.Broadcast()
+  end
+
 end
 
 hook.Add("KeyPress", "TTT2DoppelChange", DoppelChange)

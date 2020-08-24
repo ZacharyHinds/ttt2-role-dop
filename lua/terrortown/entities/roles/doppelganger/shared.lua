@@ -4,7 +4,7 @@ if SERVER then
 end
 
 roles.InitCustomTeam(ROLE.name, {
-    icon = "materials/vgui/ttt/dynamic/roles/icon_dop.vmt",
+    icon = "vgui/ttt/dynamic/roles/icon_dop.vmt",
     color = Color(132, 50, 191, 255)
 })
 
@@ -33,4 +33,31 @@ function ROLE:Initialize()
   if SERVER and JESTER then
     self.networkRoles = {JESTER}
   end
+end
+
+function CorrectDopPly(ply)
+  if not IsValid(ply) or ply:IsSpec() then return end
+  if ply:GetSubRole() ~= ROLE_DOPPELGANGER then return end
+  if ply:GetTeam() ~= TEAM_NONE then return end
+
+  ply:SetRole(ROLE_DOPPELGANGER, TEAM_DOPPELGANGER)
+end
+
+function CorrectDopTeam()
+  local GetPlayers = player.GetAll()
+  local count = #GetPlayers
+
+  for i = 1, count do
+    local ply = GetPlayers[i]
+    CorrectDopPly(ply)
+  end
+end
+
+if SERVER then
+  hook.Add("TTTBeginRound", "TTTCorrectDopTeam", CorrectDopTeam)
+  hook.Add("TTT2UpdateSubrole", "DoppelRoleChange", function(ply, old, new)
+    if new == ROLE_DOPPELGANGER then
+      CorrectDopPly(ply)
+    end
+  end)
 end
