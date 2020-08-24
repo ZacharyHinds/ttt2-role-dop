@@ -2,10 +2,10 @@ L = LANG.GetLanguageTableReference("english")
 
 -- GENERAL ROLE LANGUAGE STRINGS
 L[DOPPELGANGER.name] = "Doppelganger"
-L[DOPPELGANGER.defaultTeam] = "TEAM Doppelganger"
+L[DOPPELGANGER.defaultTeam] = "Team Doppelganger"
 L["info_popup_" .. DOPPELGANGER.name] = [[You are the Doppelganger! You can copy someone's role!]]
 L["body_found_" .. DOPPELGANGER.abbr] = "They were a Doppelganger!"
-L["search_role_" .. DOPPELGANGER.abbr] = "This person was a Doppelganger"
+L["search_role_" .. DOPPELGANGER.abbr] = "This person was a Doppelganger!"
 L["target_" .. DOPPELGANGER.name] = "Doppelganger"
 L["ttt2_desc_" .. DOPPELGANGER.name] = [[The Doppelganger can clone another player's role.]]
 L["hilite_win_" .. DOPPELGANGER.defaultTeam] = "THE DOPPELGANGER WON"
