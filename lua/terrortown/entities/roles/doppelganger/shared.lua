@@ -40,7 +40,7 @@ function CorrectDopPly(ply)
   if ply:GetSubRole() ~= ROLE_DOPPELGANGER then return end
   if ply:GetTeam() ~= TEAM_NONE then return end
 
-  ply:UpdateTeam(TEAM_DOPPELGANGER)
+  ply:SetRole(ROLE_DOPPELGANGER, TEAM_DOPPELGANGER)
 end
 
 function CorrectDopTeam()
