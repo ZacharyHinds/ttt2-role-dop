@@ -22,13 +22,6 @@ local function DoppelChange(ply, key)
 
   new_role, new_team, did_steal = hook.Run("TTT2DoppelgangerRoleChange", ply, new_role, new_team, did_steal) or new_role, new_team, did_steal
 
-  print("[TTT2 Doppelganger] Role: " .. new_role)
-  print("[TTT2 Doppelganger] Team: " .. new_team)
-  if did_steal then
-    print("[TTT2 Doppelganger] Did Steal: True")
-  else
-    print("[TTT2 Doppelganger] Did Steal: False")
-  end
   ply:SetRole(new_role, new_team)
   SendFullStateUpdate()
   ply:UpdateTeam(new_team)
@@ -42,7 +35,7 @@ local function DoppelChange(ply, key)
     SendFullStateUpdate()
   end
 
-  local popup_mode = GetConVar("ttt2_dop_declare_mode")
+  local popup_mode = GetConVar("ttt2_dop_declare_mode"):GetInt()
 
   if popup_mode == 1 or (popup_mode ~= 2 and steal_mode) then
     net.Start("ttt2_dop_popup")
@@ -68,7 +61,6 @@ hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleDopMod", function(ply, tbl)
   local dopSelected = false
 
   for dop in pairs(tbl) do
-    -- if dop == ply then continue end
     if dop:IsTerror() and dop:Alive() and dop:GetTeam() == TEAM_DOPPELGANGER and dop:GetSubRole() ~= ROLE_DOPPELGANGER then
       if dop ~= ply then
         tbl[dop] = {dop:GetBaseRole(), dop:GetSubRoleData().defaultTeam}
@@ -80,8 +72,6 @@ hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleDopMod", function(ply, tbl)
   end
 
   if dopSelected and ply:GetTeam() == TEAM_DOPPELGANGER then
-    -- local GetPlayers = player.GetAll()
-    -- local count = #GetPlayers
     for teammate in pairs(tbl) do
       if teammate == ply then continue end
       if teammate:GetTeam() == TEAM_DOPPELGANGER then continue end
