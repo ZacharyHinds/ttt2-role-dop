@@ -36,4 +36,12 @@ hook.Add("TTTUlxDynamicRCVars", "ttt2_ulx_doppel_dynamic_convars", function(tbl)
     numStart = 0,
     desc = "ttt2_dop_replace_role"
   })
+
+  table.insert(tbl[ROLE_MIMIC], {
+    cvar = "ttt2_dop_steal_delay",
+    slider = true,
+    min = 0,
+    max = 10,
+    desc = "ttt2_dop_steal_delay"
+  })
 end)
