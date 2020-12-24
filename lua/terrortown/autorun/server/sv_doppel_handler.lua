@@ -21,17 +21,16 @@ local function DoppelChange(ply, key)
   end
 
   ply, new_role, new_team, did_steal = hook.Run("TTT2DoppelgangerRoleChange", ply, new_role, new_team, did_steal) or ply, new_role, new_team, did_steal
+  timer.Simple(GetConVar("ttt2_dop_steal_delay"):GetInt(), function()
+    ply:SetRole(new_role, new_team)
+    SendFullStateUpdate()
+    ply:UpdateTeam(new_team)
+    SendFullStateUpdate()
 
-  ply:SetRole(new_role, new_team)
-  SendFullStateUpdate()
-  ply:UpdateTeam(new_team)
-  SendFullStateUpdate()
+    if not did_steal then return end
+    local steal_mode = GetConVar("ttt2_dop_steal_role"):GetBool()
 
-  if not did_steal then return end
-  local steal_mode = GetConVar("ttt2_dop_steal_role"):GetBool()
-
-  if steal_mode then
-    timer.Simple(GetConVar("ttt2_dop_steal_delay"):GetInt(), function()
+    if steal_mode then
       if not IsValid(tgt) or not tgt:Alive() or tgt:IsSpec() then return end
       local steal_role = GetConVar("ttt2_dop_replace_role"):GetInt()
       local replace_role, replace_team = ROLE_INNOCENT, TEAM_INNOCENT
@@ -47,25 +46,24 @@ local function DoppelChange(ply, key)
       end
       tgt:SetRole(replace_role, replace_team)
       SendFullStateUpdate()
-    end)
-  end
+    end
 
-  local popup_mode = GetConVar("ttt2_dop_declare_mode"):GetInt()
+    local popup_mode = GetConVar("ttt2_dop_declare_mode"):GetInt()
 
-  if popup_mode == 1 or (popup_mode ~= 2 and steal_mode) then
-    net.Start("ttt2_dop_popup")
-    net.WriteEntity(tgt)
-    net.WriteEntity(ply)
-    net.WriteBool(steal_mode)
-    net.Send(tgt)
-  elseif popup_mode == 2 then
-    net.Start("ttt2_dop_popup")
-    net.WriteEntity(tgt)
-    net.WriteEntity(ply)
-    net.WriteBool(steal_mode)
-    net.Broadcast()
-  end
-
+    if popup_mode == 1 or (popup_mode ~= 2 and steal_mode) then
+      net.Start("ttt2_dop_popup")
+      net.WriteEntity(tgt)
+      net.WriteEntity(ply)
+      net.WriteBool(steal_mode)
+      net.Send(tgt)
+    elseif popup_mode == 2 then
+      net.Start("ttt2_dop_popup")
+      net.WriteEntity(tgt)
+      net.WriteEntity(ply)
+      net.WriteBool(steal_mode)
+      net.Broadcast()
+    end
+  end)
 end
 hook.Add("KeyPress", "TTT2DoppelChange", DoppelChange)
 
