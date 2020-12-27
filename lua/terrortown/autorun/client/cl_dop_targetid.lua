@@ -9,6 +9,8 @@ local function DopMimTargetID(tData)
 
   if tData:GetEntityDistance() > 100 then return end
 
+  if client:GetNWFloat("ttt2_mim_trans_time", 0) ~= 0 then return end
+
   local params = {}
 
   if GetConVar("ttt2_dop_steal_role"):GetBool() then

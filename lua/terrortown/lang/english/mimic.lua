@@ -9,3 +9,4 @@ L["target_" .. MIMIC.name] = "Mimic"
 L["ttt2_desc_" .. MIMIC.name] = [[The Mimic copies someone's role and joins their team.]]
 
 -- OTHER ROLE LANGUAGE STRINGS
+L["ttt2_mim_transform"] = "Transforming into {role}"

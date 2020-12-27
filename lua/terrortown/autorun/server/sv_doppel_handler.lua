@@ -12,22 +12,32 @@ local function DoppelChange(ply, key)
 
   if distance > 100 or not IsValid(tgt) or not tgt:IsPlayer() then return end
 
-  local new_role = tgt:GetSubRole()
-  local new_team = tgt:GetTeam()
-  local did_steal = true
+  local mimic_data = {
+    ply = ply,
+    role = tgt:GetSubRole(),
+    rolestring = tgt:GetRoleStringRaw(),
+    team = tgt:GetTeam(),
+    did_steal = true
+  }
 
   if ply:GetSubRole() == ROLE_DOPPELGANGER then
-    new_team = TEAM_DOPPELGANGER
+    mimic_data.team = TEAM_DOPPELGANGER
   end
 
-  ply, new_role, new_team, did_steal = hook.Run("TTT2DoppelgangerRoleChange", ply, new_role, new_team, did_steal) or ply, new_role, new_team, did_steal
-  timer.Simple(GetConVar("ttt2_dop_steal_delay"):GetInt(), function()
-    ply:SetRole(new_role, new_team)
-    SendFullStateUpdate()
-    ply:UpdateTeam(new_team)
-    SendFullStateUpdate()
 
-    if not did_steal then return end
+  mimic_data = hook.Run("TTT2DoppelgangerRoleChange", mimic_data) or mimic_data
+  local delay = GetConVar("ttt2_dop_steal_delay"):GetInt()
+  ply:SetNWFloat("ttt2_mim_trans_time", CurTime())
+  ply:SetNWString("ttt2_mim_trans_rolestring", mimic_data.rolestring)
+  timer.Simple(delay, function()
+    ply:SetRole(mimic_data.role, mimic_data.team)
+    SendFullStateUpdate()
+    ply:UpdateTeam(mimic_data.team)
+    SendFullStateUpdate()
+    ply:SetNWFloat("ttt2_dop_steal_delay", 0)
+    ply:SetNWString("ttt2_mim_trans_rolestring", nil)
+
+    if not mimic_data.did_steal then return end
     local steal_mode = GetConVar("ttt2_dop_steal_role"):GetBool()
 
     if steal_mode then
@@ -96,27 +106,28 @@ hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleDopMod", function(ply, tbl)
   end
 end)
 
-local function DoppelMarker(ply, new_role, new_team, did_steal)
+local function DoppelMarker(mimic_data)
   if not MARKER then return end
+  local ply = mimic_data.ply
   if not IsValid(ply) or ply:IsSpec() or not ply:Alive() then return end
   if ply:GetSubRole() ~= ROLE_DOPPELGANGER and ply:GetSubRole() ~= ROLE_MIMIC then return end
-  if new_role ~= ROLE_MARKER then return end
-  did_steal = false
+  if mimic_data.role ~= ROLE_MARKER then return end
+  mimic_data.did_steal = false
 
   if AMNESIAC then
-    new_role = ROLE_AMNESIAC
-    new_team = TEAM_NONE
+    mimic_data.role = ROLE_AMNESIAC
+    mimic_data.team = TEAM_NONE
   elseif UNKNOWN then
-    new_role = ROLE_UNKNOWN
-    new_team = TEAM_NONE
+    mimic_data.role = ROLE_UNKNOWN
+    mimic_data.team = TEAM_NONE
   else
-    new_role = ROLE_INNOCENT
-    new_team = TEAM_INNOCENT
+    mimic_data.role = ROLE_INNOCENT
+    mimic_data.team = TEAM_INNOCENT
   end
-
+  mimic_data.rolestring = roles.GetByIndex(mimic_data.role).name
   if MARKER_DATA then MARKER_DATA:SetMarkedPlayer(ply) end
 
-  return ply, new_role, new_team, did_steal
+  return mimic_data
 end
 
 hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelMarker", DoppelMarker)

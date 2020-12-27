@@ -1,6 +1,6 @@
 CreateConVar("ttt2_dop_steal_role", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 CreateConVar("ttt2_dop_declare_mode", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
-CreateConVar("ttt2_dop_steal_delay", "2", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+CreateConVar("ttt2_dop_steal_delay", "2", {FCVAR_NOTIFY, FCVAR_ARCHIVE, FCVAR_REPLICATED})
 CreateConVar("ttt2_dop_replace_role", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 
 hook.Add("TTTUlxDynamicRCVars", "ttt2_ulx_doppel_dynamic_convars", function(tbl)
