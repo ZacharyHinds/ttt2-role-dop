@@ -108,6 +108,7 @@ end)
 
 local function DoppelMarker(mimic_data)
   if not MARKER then return end
+  if not GetConVar("ttt2_dop_marker"):GetBool() then return end
   local ply = mimic_data.ply
   if not IsValid(ply) or ply:IsSpec() or not ply:Alive() then return end
   if ply:GetSubRole() ~= ROLE_DOPPELGANGER and ply:GetSubRole() ~= ROLE_MIMIC then return end
