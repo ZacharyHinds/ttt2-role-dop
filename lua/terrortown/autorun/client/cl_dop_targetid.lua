@@ -49,6 +49,7 @@ local function DopMimPopup()
   local targetply = net.ReadEntity()
   local mimicply = net.ReadEntity()
   local steal_mode = net.ReadBool()
+  local new_role = net.ReadString()
 
   local client = LocalPlayer()
   if mimicply:SteamID() == client:SteamID() then return end
@@ -59,7 +60,7 @@ local function DopMimPopup()
         text = LANG.TryTranslation("ttt2_dop_stole"),
         color = MIMIC.ltcolor
       },
-      LANG.TryTranslation("ttt2_dop_stole_text")
+      LANG.GetParamTranslation("ttt2_dop_stole_text", {role = new_role})
     )
     else
       EPOP:AddMessage({

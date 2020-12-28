@@ -17,7 +17,7 @@ L["ttt2_dop_clone_all"] = "Der Imitator hat die Rolle eines anderen Spielers kop
 L["ttt2_dop_stole_all"] = "Der Imitator hat die Rolle eines anderen Spielers geklaut!"
 L["ttt2_dop_clone"] = "Der Imitator hat deine Rolle kopiert!"
 L["ttt2_dop_stole"] = "Der Imitator hat deine Rolle geklaut"
-L["ttt2_dop_stole_text"] = "Du bist jetzt ein Amnesist!"
+L["ttt2_dop_stole_text"] = "Du bist jetzt ein {role}!"
 L["ttt2_dop_desc_copy"] = "Drücke {usekey} um die Rolle zu {mode}"
 
 -- ULX LANGUAGE STRINGS

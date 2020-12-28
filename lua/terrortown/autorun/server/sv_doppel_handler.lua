@@ -65,6 +65,7 @@ local function DoppelChange(ply, key)
       net.WriteEntity(tgt)
       net.WriteEntity(ply)
       net.WriteBool(steal_mode)
+      net.WriteString(tgt:GetRoleString())
       net.Send(tgt)
     elseif popup_mode == 2 then
       net.Start("ttt2_dop_popup")

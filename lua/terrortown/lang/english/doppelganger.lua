@@ -17,7 +17,7 @@ L["ttt2_dop_clone_all"] = "The Mimic has copied someone's role!"
 L["ttt2_dop_stole_all"] = "The Mimic has stolen someone's role!"
 L["ttt2_dop_clone"] = "The Mimic has copied your role!"
 L["ttt2_dop_stole"] = "The Mimic has stolen your role!"
-L["ttt2_dop_stole_text"] = "You are now an Amnesiac!"
+L["ttt2_dop_stole_text"] = "You are now a {role}!"
 L["ttt2_dop_desc_copy"] = "Press {usekey} to {mode} their role"
 
 -- ULX LANGUAGE STRINGS
