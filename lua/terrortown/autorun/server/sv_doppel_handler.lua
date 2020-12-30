@@ -11,6 +11,7 @@ local function DoppelChange(ply, key)
   local tgt = trace.Entity
 
   if distance > 100 or not IsValid(tgt) or not tgt:IsPlayer() then return end
+  if ply:GetNWFloat("ttt2_mim_trans_time", 0) ~= 0 then return end
 
   local mimic_data = {
     ply = ply,
@@ -36,7 +37,7 @@ local function DoppelChange(ply, key)
     SendFullStateUpdate()
     ply:UpdateTeam(mimic_data.team)
     SendFullStateUpdate()
-    ply:SetNWFloat("ttt2_dop_steal_delay", 0)
+    ply:SetNWFloat("ttt2_mim_trans_time", 0)
     ply:SetNWString("ttt2_mim_trans_rolestring", nil)
 
     if not mimic_data.did_steal then return end
@@ -107,30 +108,3 @@ hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleDopMod", function(ply, tbl)
     end
   end
 end)
-
-local function DoppelMarker(mimic_data)
-  if not MARKER then return end
-  if not GetConVar("ttt2_dop_marker"):GetBool() then return end
-  local ply = mimic_data.ply
-  if not IsValid(ply) or ply:IsSpec() or not ply:Alive() then return end
-  if ply:GetSubRole() ~= ROLE_DOPPELGANGER and ply:GetSubRole() ~= ROLE_MIMIC then return end
-  if mimic_data.role ~= ROLE_MARKER then return end
-  mimic_data.did_steal = false
-
-  if AMNESIAC then
-    mimic_data.role = ROLE_AMNESIAC
-    mimic_data.team = TEAM_NONE
-  elseif UNKNOWN then
-    mimic_data.role = ROLE_UNKNOWN
-    mimic_data.team = TEAM_NONE
-  else
-    mimic_data.role = ROLE_INNOCENT
-    mimic_data.team = TEAM_INNOCENT
-  end
-  mimic_data.rolestring = roles.GetByIndex(mimic_data.role).name
-  if MARKER_DATA then MARKER_DATA:SetMarkedPlayer(ply) end
-
-  return mimic_data
-end
-
-hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelMarker", DoppelMarker)
