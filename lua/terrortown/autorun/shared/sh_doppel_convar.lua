@@ -3,14 +3,16 @@ CreateConVar("ttt2_dop_declare_mode", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 CreateConVar("ttt2_dop_steal_delay", "2", {FCVAR_NOTIFY, FCVAR_ARCHIVE, FCVAR_REPLICATED})
 CreateConVar("ttt2_dop_replace_role", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 CreateConVar("ttt2_dop_marker", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+CreateConVar("ttt2_mim_steal_role", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 hook.Add("TTTUlxDynamicRCVars", "ttt2_ulx_doppel_dynamic_convars", function(tbl)
   tbl[ROLE_MIMIC] = tbl[ROLE_MIMIC] or {}
+  tbl[ROLE_DOPPELGANGER] = tbl[ROLE_DOPPELGANGER] or {}
 
   table.insert(tbl[ROLE_MIMIC], {
-      cvar = "ttt2_dop_steal_role",
+      cvar = "ttt2_mim_steal_role",
       checkbox = true,
-      desc = "ttt2_dop_steal_role"
+      desc = "ttt2_mim_steal_role"
   })
 
   table.insert(tbl[ROLE_MIMIC], {
@@ -50,5 +52,11 @@ hook.Add("TTTUlxDynamicRCVars", "ttt2_ulx_doppel_dynamic_convars", function(tbl)
     cvar = "ttt2_dop_marker",
     checkbox = true,
     desc = "ttt2_dop_marker"
+  })
+
+  table.insert(tbl[ROLE_DOPPELGANGER], {
+      cvar = "ttt2_mim_steal_role",
+      checkbox = true,
+      desc = "ttt2_mim_steal_role"
   })
 end)

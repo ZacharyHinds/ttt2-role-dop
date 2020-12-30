@@ -20,8 +20,10 @@ local function DoppelChange(ply, key)
     did_steal = true
   }
 
+  local steal_mode = GetConVar("ttt2_mim_steal_role"):GetBool()
   if ply:GetSubRole() == ROLE_DOPPELGANGER then
     mimic_data.team = TEAM_DOPPELGANGER
+    steal_mode = GetConVar("ttt2_dop_steal_role"):GetBool()
   end
 
 
@@ -38,7 +40,6 @@ local function DoppelChange(ply, key)
     ply:SetNWString("ttt2_mim_trans_rolestring", nil)
 
     if not mimic_data.did_steal then return end
-    local steal_mode = GetConVar("ttt2_dop_steal_role"):GetBool()
 
     if steal_mode then
       if not IsValid(tgt) or not tgt:Alive() or tgt:IsSpec() then return end
