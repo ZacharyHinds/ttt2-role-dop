@@ -19,6 +19,7 @@ L["ttt2_dop_clone"] = "Мимик скопировал вашу роль!"
 L["ttt2_dop_stole"] = "Мимик украл вашу роль!"
 L["ttt2_dop_stole_text"] = "Теперь у вас амнезия!"
 L["ttt2_dop_desc_copy"] = "Нажмите {usekey}, чтобы {mode} их роль"
+-- L["ttt_dop_was_dop"] = "This person was actually a Doppelganger in disguise!"
 
 -- ULX LANGUAGE STRINGS
 -- L["ttt2_dop_declare_state_0"] = "Не объявлять"
