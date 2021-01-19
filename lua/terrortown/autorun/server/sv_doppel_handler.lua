@@ -41,9 +41,12 @@ local function DoppelChange(ply, key)
     ply:SetNWString("ttt2_mim_trans_rolestring", nil)
 
     if not mimic_data.did_steal then return end
+    local invuln_time = GetConVar("ttt2_mim_grace_time"):GetInt() + CurTime()
+    ply:SetNWFloat("ttt2_mim_stole_nerf", invuln_time)
+    if not IsValid(tgt) or not tgt:Alive() or tgt:IsSpec() then return end
+    tgt:SetNWFloat("ttt2_mim_stole_invul", invuln_time)
 
     if steal_mode then
-      if not IsValid(tgt) or not tgt:Alive() or tgt:IsSpec() then return end
       local steal_role = GetConVar("ttt2_dop_replace_role"):GetInt()
       local replace_role, replace_team = ROLE_INNOCENT, TEAM_INNOCENT
       if steal_role == 1 and AMNESIAC then
@@ -106,5 +109,15 @@ hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleDopMod", function(ply, tbl)
         tbl[teammate] = {teammate:GetSubRole(), teammate:GetTeam()}
       end
     end
+  end
+end)
+
+hook.Add("EntityTakeDamage", "DoppelgangerPreventDamage", function(ply, dmginfo)
+  if not ply or not IsValid(ply) or not ply:IsPlayer() then return end
+
+  local attacker = dmginfo:GetAttacker()
+  if not attacker or not IsValid(attacker) or not attacker:IsPlayer() then return end
+  if attacker:GetNWFloat("ttt2_mim_trans_time", 0) > 0 or (attacker:GetNWFloat("ttt2_mim_stole_nerf") > CurTime() and ply:GetNWFloat("ttt2_mim_stole_invul") > CurTime()) then
+    dmginfo:SetDamage(0)
   end
 end)
