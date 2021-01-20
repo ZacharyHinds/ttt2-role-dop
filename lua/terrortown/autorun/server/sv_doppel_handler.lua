@@ -10,15 +10,17 @@ local function DoppelChange(ply, key)
   local distance = trace.StartPos:Distance(trace.HitPos)
   local tgt = trace.Entity
 
-  if distance > 100 or not IsValid(tgt) or not tgt:IsPlayer() then return end
+  if distance > 120 or not IsValid(tgt) or not tgt:IsPlayer() then return end
   if ply:GetNWFloat("ttt2_mim_trans_time", 0) ~= 0 then return end
 
   local mimic_data = {
     ply = ply,
+    tgt = tgt,
     role = tgt:GetSubRole(),
     rolestring = tgt:GetRoleStringRaw(),
     team = tgt:GetTeam(),
-    did_steal = true
+    did_steal = true,
+    abort = false
   }
 
   local steal_mode = GetConVar("ttt2_mim_steal_role"):GetBool()
@@ -29,10 +31,17 @@ local function DoppelChange(ply, key)
 
 
   mimic_data = hook.Run("TTT2DoppelgangerRoleChange", mimic_data) or mimic_data
+  if mimic_data.abort then return end
   local delay = GetConVar("ttt2_dop_steal_delay"):GetInt()
   ply:SetNWFloat("ttt2_mim_trans_time", CurTime())
   ply:SetNWString("ttt2_mim_trans_rolestring", mimic_data.rolestring)
   timer.Simple(delay, function()
+    local invuln_time = 0
+    if ply:GetSubRole() == ROLE_MIMIC then
+      invuln_time = GetConVar("ttt2_mim_grace_time"):GetInt() + CurTime()
+    else
+      invuln_time = GetConVar("ttt2_dop_grace_time"):GetInt() + CurTime()
+    end
     ply:SetRole(mimic_data.role, mimic_data.team)
     SendFullStateUpdate()
     ply:UpdateTeam(mimic_data.team)
@@ -41,7 +50,6 @@ local function DoppelChange(ply, key)
     ply:SetNWString("ttt2_mim_trans_rolestring", nil)
 
     if not mimic_data.did_steal then return end
-    local invuln_time = GetConVar("ttt2_mim_grace_time"):GetInt() + CurTime()
     ply:SetNWFloat("ttt2_mim_stole_nerf", invuln_time)
     if not IsValid(tgt) or not tgt:Alive() or tgt:IsSpec() then return end
     tgt:SetNWFloat("ttt2_mim_stole_invul", invuln_time)

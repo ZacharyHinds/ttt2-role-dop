@@ -9,7 +9,14 @@ CreateConVar("ttt2_dop_marker", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 CreateConVar("ttt2_dop_jester", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 CreateConVar("ttt2_dop_infected", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 CreateConVar("ttt2_dop_beacon", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+CreateConVar("ttt2_dop_grace_time", "10", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
+CreateConVar("ttt2_dop_mimic", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+CreateConVar("ttt2_dop_unknown", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+CreateConVar("ttt2_dop_amnesiac", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+CreateConVar("ttt2_dop_pirate", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+CreateConVar("ttt2_dop_bodyguard", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+CreateConVar("ttt2_dop_allow_force_team", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 
 hook.Add("TTTUlxDynamicRCVars", "ttt2_ulx_doppel_dynamic_convars", function(tbl)
   tbl[ROLE_MIMIC] = tbl[ROLE_MIMIC] or {}
@@ -75,6 +82,14 @@ hook.Add("TTTUlxDynamicRCVars", "ttt2_ulx_doppel_dynamic_convars", function(tbl)
   })
 
   table.insert(tbl[ROLE_DOPPELGANGER], {
+    cvar = "ttt2_dop_grace_time",
+    slider = true,
+    min = 0,
+    max = 120,
+    desc = "ttt2_dop_grace_time (def. 10)"
+  })
+
+  table.insert(tbl[ROLE_DOPPELGANGER], {
     cvar = "ttt2_dop_jester",
     checkbox = true,
     desc = "ttt2_dop_jester"
@@ -90,6 +105,30 @@ hook.Add("TTTUlxDynamicRCVars", "ttt2_ulx_doppel_dynamic_convars", function(tbl)
     cvar = "ttt2_dop_beacon",
     checkbox = true,
     desc = "ttt2_dop_beacon"
+  })
+
+  table.insert(tbl[ROLE_DOPPELGANGER], {
+    cvar = "ttt2_dop_amnesiac",
+    checkbox = true,
+    desc = "ttt2_dop_amnesiac"
+  })
+
+  table.insert(tbl[ROLE_DOPPELGANGER], {
+    cvar = "ttt2_dop_unknown",
+    checkbox = true,
+    desc = "ttt2_dop_unknown"
+  })
+
+  table.insert(tbl[ROLE_DOPPELGANGER], {
+    cvar = "ttt2_dop_pirate",
+    checkbox = true,
+    desc = "ttt2_dop_pirate"
+  })
+
+  table.insert(tbl[ROLE_DOPPELGANGER], {
+    cvar = "ttt2_dop_allow_force_team",
+    checkbox = true,
+    desc = "ttt2_dop_allow_force_team"
   })
 
 end)

@@ -39,11 +39,15 @@ local function DoppelJester(mimic_data)
     mimic_data.team = TEAM_NONE
   else
     mimic_data.role = ROLE_INNOCENT
-    mimic_data.team = TEAM_INNOCENT
   end
   mimic_data.rolestring = roles.GetByIndex(mimic_data.role).name
 
   return mimic_data
+end
+
+local function DoppelDoppel(mimic_data)
+  if mimic_data.role ~= ROLE_DOPPELGANGER then return end
+  mimic_data.abort = true
 end
 
 local function DoppelInfected(mimic_data)
@@ -59,7 +63,6 @@ local function DoppelInfected(mimic_data)
     mimic_data.team = TEAM_NONE
   else
     mimic_data.role = ROLE_INNOCENT
-    mimic_data.team = TEAM_INNOCENT
   end
   mimic_data.rolestring = roles.GetByIndex(mimic_data.role).name
 
@@ -73,14 +76,122 @@ local function DoppelBeacon(mimic_data)
   if not IsValid(ply) or ply:IsSpec() or not ply:Alive() then return end
   if ply:GetSubRole() ~= ROLE_DOPPELGANGER then return end
   if mimic_data.role ~= ROLE_BEACON then return end
-  mimic_data.role = ROLE_INNOCENT
-  mimic_data.team = TEAM_INNOCENT
-  mimic_data.rolestring = roles.GetByIndex(mimic_data.role).name
+  -- mimic_data.role = ROLE_INNOCENT
+  -- mimic_data.rolestring = roles.GetByIndex(mimic_data.role).name
+  ply:SetNWBool("isForceDoppelganger", true)
 
   return mimic_data
+end
+
+local function DoppelMimic(mimic_data)
+  if not MIMIC then return end
+  if not GetConVar("ttt2_dop_mimic"):GetBool() then return end
+  local ply = mimic_data.ply
+  if not IsValid(ply) or ply:IsSpec() or not ply:Alive() then return end
+  if ply:GetSubRole() ~= ROLE_DOPPELGANGER then return end
+  if mimic_data.role ~= ROLE_MIMIC then return end
+  local tgt = mimic_data.tgt
+  if not IsValid(tgt) or tgt:IsSpec() or not tgt:Alive() then return end
+  tgt:SetRole(ROLE_DOPPELGANGER, TEAM_DOPPELGANGER)
+  SendFullStateUpdate()
+  tgt:UpdateTeam(TEAM_DOPPELGANGER)
+  SendFullStateUpdate()
+  mimic_data.abort = true
+  mimic_data.role = ROLE_DOPPELGANGER
+  return mimic_data
+end
+
+local function DoppelUnknown(mimic_data)
+  if not UNKNOWN then return end
+  if not GetConVar("ttt2_dop_unknown"):GetBool() then return end
+  local ply = mimic_data.ply
+  local tgt = mimic_data.tgt
+  if not IsValid(ply) or not IsValid(tgt) or not ply:Alive() or not tgt:Alive() or ply:IsSpec() or tgt:IsSpec() then return end
+  if mimic_data.role ~= ROLE_UNKNOWN then return end
+  if ply:GetSubRole() ~= ROLE_DOPPELGANGER then return end
+  mimic_data.did_steal = false
+  ply:SetNWBool("isForceDoppelganger", true)
+
+  return mimic_data
+end
+
+local function DoppelAmnesiac(mimic_data)
+  if not AMNESIAC then return end
+  if not GetConVar("ttt2_dop_amnesiac"):GetBool() then return end
+  local ply = mimic_data.ply
+  local tgt = mimic_data.tgt
+  if not IsValid(ply) or not IsValid(tgt) or not ply:Alive() or not tgt:Alive() or ply:IsSpec() or tgt:IsSpec() then return end
+  if mimic_data.role ~= ROLE_AMNESIAC then return end
+  if ply:GetSubRole() ~= ROLE_DOPPELGANGER then return end
+  mimic_data.did_steal = false
+  ply:SetNWBool("isForceDoppelganger", true)
+
+  return mimic_data
+end
+
+local function DoppelBodyguard(mimic_data)
+  if not BODYGUARD then return end
+  if not GetConVar("ttt2_dop_bodyguard"):GetBool() then return end
+  local ply = mimic_data.ply
+  local tgt = mimic_data.tgt
+  if not IsValid(ply) or not IsValid(tgt) or not ply:Alive() or not tgt:Alive() or ply:IsSpec() or tgt:IsSpec() then return end
+  if mimic_data.role ~= ROLE_BODYGUARD then return end
+  if ply:GetSubRole() ~= ROLE_DOPPELGANGER then return end
+  mimic_data.did_steal = false
+  mimic_data.abort = true
+  tgt:SetRole(ROLE_DOPPELGANGER, TEAM_DOPPELGANGER)
+  ply:SetRole(ROLE_BODYGUARD, TEAM_DOPPELGANGER)
+  SendFullStateUpdate()
+  timer.Simple(0.1, function() BODYGRD_DATA:SetNewGuard(ply, tgt) end)
+  return mimic_data
+end
+
+local function ForceDoppelgangerTeam(ply, old, new)
+  if not ply or not IsValid(ply) then return end
+  if not GetConVar("ttt2_dop_allow_force_team"):GetBool() then return end
+  if old ~= TEAM_DOPPELGANGER or new == TEAM_DOPPELGANGER then return end
+  if not ply:GetNWBool("isForceDoppelganger") then return end
+  ply:UpdateTeam(TEAM_DOPPELGANGER)
+  ply:SetNWBool("isForceDoppelganger", false)
+end
+
+local function ResetForceDoppelTeam()
+  local plys = player.GetAll()
+  for i = 1, #plys do
+    plys[i]:SetNWBool("isForceDoppelganger", false)
+  end
+end
+
+local function PirateDoppelTeam(ply, old, new)
+  if not ply or not IsValid(ply) then return end
+  if not GetConVar("ttt2_dop_pirate"):GetBool() then return end
+  if old ~= TEAM_DOPPELGANGER or new == TEAM_DOPPELGANGER then return end
+  if ply:GetSubRole() ~= ROLE_PIRATE and ply:GetSubRole() ~= ROLE_PIRATE_CAPTAIN then return end
+  ply:UpdateTeam(TEAM_DOPPELGANGER)
+end
+
+local function BodyguardDoppelTeam(ply, old, new)
+  if not ply or not IsValid(ply) then return end
+  if not GetConVar("ttt2_dop_bodyguard"):GetBool() then return end
+  if old ~= TEAM_DOPPELGANGER or new == TEAM_DOPPELGANGER then return end
+  if ply:GetSubRole() ~= ROLE_BODYGUARD then return end
+  ply:UpdateTeam(TEAM_DOPPELGANGER)
 end
 
 hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelMarker", DoppelMarker)
 hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelJester", DoppelJester)
 hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelInfected", DoppelInfected)
 hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelBeacon", DoppelBeacon)
+hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelMimic", DoppelMimic)
+hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelUnknown", DoppelUnknown)
+hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelAmnesiac", DoppelAmnesiac)
+hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelBodyguard", DoppelBodyguard)
+hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelDoppel", DoppelDoppel)
+
+hook.Add("TTTBeginRound", "ResetForceDoppelTeam", ResetForceDoppelTeam)
+hook.Add("TTTPrepareRound", "ResetForceDoppelTeam", ResetForceDoppelTeam)
+hook.Add("TTTEndRound", "ResetForceDoppelTeam", ResetForceDoppelTeam)
+
+hook.Add("TTT2UpdateTeam", "ForceDoppelgangerTeam", ForceDoppelgangerTeam)
+hook.Add("TTT2UpdateTeam", "PirateDoppelTeam", PirateDoppelTeam)
+hook.Add("TTT2UpdateTeam", "BodyguardDoppelTeam", BodyguardDoppelTeam)
