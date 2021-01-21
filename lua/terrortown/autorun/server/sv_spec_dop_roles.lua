@@ -146,6 +146,14 @@ local function DoppelBodyguard(mimic_data)
   return mimic_data
 end
 
+local function DoppelWrath(mimic_data)
+  if not WRATH then return end
+  if not GetConVar("ttt2_dop_wrath"):GetBool() then return end
+  local ply = mimic_data.ply
+  if not IsValid(ply) or not ply:Alive() or ply:IsSpec() then return end
+  ply:SetNWBool("isForceDoppelganger", true)
+end
+
 local function ForceDoppelgangerTeam(ply, old, new)
   if not ply or not IsValid(ply) then return end
   if not GetConVar("ttt2_dop_allow_force_team"):GetBool() then return end
@@ -187,6 +195,7 @@ hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelUnknown", DoppelUnknown)
 hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelAmnesiac", DoppelAmnesiac)
 hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelBodyguard", DoppelBodyguard)
 hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelDoppel", DoppelDoppel)
+hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelWrath", DoppelWrath)
 
 hook.Add("TTTBeginRound", "ResetForceDoppelTeam", ResetForceDoppelTeam)
 hook.Add("TTTPrepareRound", "ResetForceDoppelTeam", ResetForceDoppelTeam)
