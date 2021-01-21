@@ -17,6 +17,7 @@ CreateConVar("ttt2_dop_amnesiac", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 CreateConVar("ttt2_dop_pirate", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 CreateConVar("ttt2_dop_bodyguard", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 CreateConVar("ttt2_dop_allow_force_team", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+CreateConVar("ttt2_dop_wrath", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 
 hook.Add("TTTUlxDynamicRCVars", "ttt2_ulx_doppel_dynamic_convars", function(tbl)
   tbl[ROLE_MIMIC] = tbl[ROLE_MIMIC] or {}
@@ -123,6 +124,18 @@ hook.Add("TTTUlxDynamicRCVars", "ttt2_ulx_doppel_dynamic_convars", function(tbl)
     cvar = "ttt2_dop_pirate",
     checkbox = true,
     desc = "ttt2_dop_pirate"
+  })
+
+  table.insert(tbl[ROLE_DOPPELGANGER], {
+    cvar = "ttt2_dop_bodyguard",
+    checkbox = true,
+    desc = "ttt2_dop_bodyguard"
+  })
+
+  table.insert(tbl[ROLE_DOPPELGANGER], {
+    cvar = "ttt2_dop_wrath",
+    checkbox = true,
+    desc = "ttt2_dop_wrath"
   })
 
   table.insert(tbl[ROLE_DOPPELGANGER], {
