@@ -76,9 +76,9 @@ hook.Add("TTTUlxDynamicRCVars", "ttt2_ulx_doppel_dynamic_convars", function(tbl)
   })
 
   table.insert(tbl[ROLE_DOPPELGANGER], {
-      cvar = "ttt2_mim_steal_role",
+      cvar = "ttt2_dop_steal_role",
       checkbox = true,
-      desc = "ttt2_mim_steal_role"
+      desc = "ttt2_dop_steal_role"
   })
 
   table.insert(tbl[ROLE_DOPPELGANGER], {
