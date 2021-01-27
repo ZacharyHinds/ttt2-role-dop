@@ -19,6 +19,11 @@ CreateConVar("ttt2_dop_bodyguard", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 CreateConVar("ttt2_dop_allow_force_team", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 CreateConVar("ttt2_dop_wrath", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 
+CreateConVar("ttt2_dop_thrall", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+CreateConVar("ttt2_dop_jackal", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+CreateConVar("ttt2_dop_sidekick", "0", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+CreateConVar("ttt2_dop_corpse_indicator", "1", {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+
 hook.Add("TTTUlxDynamicRCVars", "ttt2_ulx_doppel_dynamic_convars", function(tbl)
   tbl[ROLE_MIMIC] = tbl[ROLE_MIMIC] or {}
   tbl[ROLE_DOPPELGANGER] = tbl[ROLE_DOPPELGANGER] or {}
@@ -91,6 +96,12 @@ hook.Add("TTTUlxDynamicRCVars", "ttt2_ulx_doppel_dynamic_convars", function(tbl)
   })
 
   table.insert(tbl[ROLE_DOPPELGANGER], {
+    cvar = "ttt2_dop_corpse_indicator",
+    checkbox = true,
+    desc = "ttt2_dop_corpse_indicator"
+  })
+
+  table.insert(tbl[ROLE_DOPPELGANGER], {
     cvar = "ttt2_dop_jester",
     checkbox = true,
     desc = "ttt2_dop_jester"
@@ -136,6 +147,24 @@ hook.Add("TTTUlxDynamicRCVars", "ttt2_ulx_doppel_dynamic_convars", function(tbl)
     cvar = "ttt2_dop_wrath",
     checkbox = true,
     desc = "ttt2_dop_wrath"
+  })
+
+  table.insert(tbl[ROLE_DOPPELGANGER], {
+    cvar = "ttt2_dop_thrall",
+    checkbox = true,
+    desc = "ttt2_dop_thrall"
+  })
+
+  table.insert(tbl[ROLE_DOPPELGANGER], {
+    cvar = "ttt2_dop_jackal",
+    checkbox = true,
+    desc = "ttt2_dop_jackal"
+  })
+
+  table.insert(tbl[ROLE_DOPPELGANGER], {
+    cvar = "ttt2_dop_sidekick",
+    checkbox = true,
+    desc = "ttt2_dop_sidekick"
   })
 
   table.insert(tbl[ROLE_DOPPELGANGER], {

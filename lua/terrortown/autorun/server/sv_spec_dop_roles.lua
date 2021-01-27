@@ -154,11 +154,18 @@ local function DoppelWrath(mimic_data)
   ply:SetNWBool("isForceDoppelganger", true)
 end
 
+local function isExceptedRole(ply)
+  local role = ply:GetSubRole()
+  if role == ROLE_THRALL and not GetConVar("ttt2_dop_thrall"):GetBool() then return true end
+  if role == ROLE_SIDEKICK and not GetConVar("ttt2_dop_sidekick"):GetBool() then return true end
+end
+
 local function ForceDoppelgangerTeam(ply, old, new)
   if not ply or not IsValid(ply) then return end
   if not GetConVar("ttt2_dop_allow_force_team"):GetBool() then return end
   if old ~= TEAM_DOPPELGANGER or new == TEAM_DOPPELGANGER then return end
   if not ply:GetNWBool("isForceDoppelganger") then return end
+  if isExceptedRole(ply) then return end
   ply:UpdateTeam(TEAM_DOPPELGANGER)
   ply:SetNWBool("isForceDoppelganger", false)
 end
@@ -167,6 +174,7 @@ local function ResetForceDoppelTeam()
   local plys = player.GetAll()
   for i = 1, #plys do
     plys[i]:SetNWBool("isForceDoppelganger", false)
+    plys[i]:SetNWBool("DopJackalSidekick", false)
   end
 end
 
@@ -183,6 +191,35 @@ local function BodyguardDoppelTeam(ply, old, new)
   if not GetConVar("ttt2_dop_bodyguard"):GetBool() then return end
   if old ~= TEAM_DOPPELGANGER or new == TEAM_DOPPELGANGER then return end
   if ply:GetSubRole() ~= ROLE_BODYGUARD then return end
+  ply:UpdateTeam(TEAM_DOPPELGANGER)
+end
+
+local function IsJackalDoppel()
+  if not DOPPELGANGER or not JACKAL then return end
+  local plys = util.GetAlivePlayers()
+  for i = 1, #plys do
+    local ply = plys[i]
+    if ply:GetSubRole() == ROLE_JACKAL and ply:GetTeam() == TEAM_DOPPELGANGER then
+      return true
+    end
+  end
+end
+
+local function JackalSidekickDoppel(ply, old, new)
+  if not ply or not IsValid(ply) then return end
+  if not DOPPELGANGER or not JACKAL or not SIDEKICK then return end
+  if new ~= TEAM_JACKAL then return end
+  if not IsJackalDoppel() then return end
+
+  ply:UpdateTeam(TEAM_DOPPELGANGER)
+end
+
+local function ThrallDoppelTeam(ply, old, new)
+  if not ply or not IsValid(ply) then return end
+  if not MESMERIST or not THRALL or not DOPPELGANGER then return end
+  if new ~= TEAM_TRAITOR then return end
+  if not GetConVar("ttt2_dop_thrall"):GetBool() then return end
+  if ply:GetSubRole() ~= ROLE_THRALL then return end
   ply:UpdateTeam(TEAM_DOPPELGANGER)
 end
 
@@ -204,3 +241,6 @@ hook.Add("TTTEndRound", "ResetForceDoppelTeam", ResetForceDoppelTeam)
 hook.Add("TTT2UpdateTeam", "ForceDoppelgangerTeam", ForceDoppelgangerTeam)
 hook.Add("TTT2UpdateTeam", "PirateDoppelTeam", PirateDoppelTeam)
 hook.Add("TTT2UpdateTeam", "BodyguardDoppelTeam", BodyguardDoppelTeam)
+hook.Add("TTT2UpdateTeam", "JackalSidekickDoppel", JackalSidekickDoppel)
+hook.Add("TTT2UpdateTeam", "ThrallDoppelTeam", ThrallDoppelTeam)
+hook.Add("TTT2UpdateTeam", "SidekickDoppelTeam", SidekickDoppelTeam)
