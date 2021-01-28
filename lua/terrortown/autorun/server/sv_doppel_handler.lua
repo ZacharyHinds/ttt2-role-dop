@@ -93,12 +93,12 @@ hook.Add("KeyPress", "TTT2DoppelChange", DoppelChange)
 
 hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleDopMod", function(ply, tbl)
   if GetRoundState() == ROUND_POST then return end
-  if ply:GetSubRoleData().unknownTeam then return end
+  -- if ply:GetSubRoleData().unknownTeam then return end
 
   local dopSelected = false
 
   for dop in pairs(tbl) do
-    if dop:IsTerror() and dop:Alive() and dop:GetTeam() == TEAM_DOPPELGANGER and dop:GetSubRole() ~= ROLE_DOPPELGANGER then
+    if dop:IsTerror() and dop:Alive() and dop:GetTeam() == TEAM_DOPPELGANGER and dop:GetSubRole() ~= ROLE_DOPPELGANGER and (ply:GetSubRoleData().unknownTeam or dop:GetBaseRole() == ROLE_DETECTIVE) then
       if dop ~= ply then
         tbl[dop] = {dop:GetSubRole(), dop:GetSubRoleData().defaultTeam}
       else
