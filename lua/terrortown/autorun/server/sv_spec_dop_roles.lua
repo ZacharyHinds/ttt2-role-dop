@@ -218,6 +218,7 @@ local function ThrallDoppelTeam(ply, old, new)
   if not ply or not IsValid(ply) then return end
   if not MESMERIST or not THRALL or not DOPPELGANGER then return end
   if new ~= TEAM_TRAITOR then return end
+  if old ~= TEAM_DOPPELGANGER then return end
   if not GetConVar("ttt2_dop_thrall"):GetBool() then return end
   if ply:GetSubRole() ~= ROLE_THRALL then return end
   ply:UpdateTeam(TEAM_DOPPELGANGER)
