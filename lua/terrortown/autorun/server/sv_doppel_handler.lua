@@ -98,7 +98,7 @@ hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleDopMod", function(ply, tbl)
   local dopSelected = false
 
   for dop in pairs(tbl) do
-    if dop:IsTerror() and dop:Alive() and dop:GetTeam() == TEAM_DOPPELGANGER and dop:GetSubRole() ~= ROLE_DOPPELGANGER and (ply:GetSubRoleData().unknownTeam or dop:GetBaseRole() == ROLE_DETECTIVE) then
+    if dop:IsTerror() and dop:Alive() and dop:GetTeam() == TEAM_DOPPELGANGER and dop:GetSubRole() ~= ROLE_DOPPELGANGER and (not ply:GetSubRoleData().unknownTeam or dop:GetBaseRole() == ROLE_DETECTIVE) then
       if dop ~= ply then
         tbl[dop] = {dop:GetSubRole(), dop:GetSubRoleData().defaultTeam}
       else
