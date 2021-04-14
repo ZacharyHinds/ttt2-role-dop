@@ -20,6 +20,7 @@ local function DoppelMarker(mimic_data)
   mimic_data.rolestring = roles.GetByIndex(mimic_data.role).name
   if MARKER_DATA then MARKER_DATA:SetMarkedPlayer(ply) end
 
+  ply:SetNWBool("isForceDoppelganger", false)
   return mimic_data
 end
 
@@ -42,6 +43,7 @@ local function DoppelJester(mimic_data)
   end
   mimic_data.rolestring = roles.GetByIndex(mimic_data.role).name
 
+  ply:SetNWBool("isForceDoppelganger", false)
   return mimic_data
 end
 
@@ -78,7 +80,7 @@ local function DoppelBeacon(mimic_data)
   if mimic_data.role ~= ROLE_BEACON then return end
   -- mimic_data.role = ROLE_INNOCENT
   -- mimic_data.rolestring = roles.GetByIndex(mimic_data.role).name
-  ply:SetNWBool("isForceDoppelganger", true)
+  ply:SetNWBool("isDormantDoppelganger", true)
 
   return mimic_data
 end
@@ -110,7 +112,7 @@ local function DoppelUnknown(mimic_data)
   if mimic_data.role ~= ROLE_UNKNOWN then return end
   if ply:GetSubRole() ~= ROLE_DOPPELGANGER then return end
   mimic_data.did_steal = false
-  ply:SetNWBool("isForceDoppelganger", true)
+  ply:SetNWBool("isDormantDoppelganger", true)
 
   return mimic_data
 end
@@ -124,7 +126,7 @@ local function DoppelAmnesiac(mimic_data)
   if mimic_data.role ~= ROLE_AMNESIAC then return end
   if ply:GetSubRole() ~= ROLE_DOPPELGANGER then return end
   mimic_data.did_steal = false
-  ply:SetNWBool("isForceDoppelganger", true)
+  ply:SetNWBool("isDormantDoppelganger", true)
 
   return mimic_data
 end
@@ -151,7 +153,7 @@ local function DoppelWrath(mimic_data)
   if not GetConVar("ttt2_dop_wrath"):GetBool() then return end
   local ply = mimic_data.ply
   if not IsValid(ply) or not ply:Alive() or ply:IsSpec() then return end
-  ply:SetNWBool("isForceDoppelganger", true)
+  ply:SetNWBool("isDormantDoppelganger", true)
 end
 
 local function isExceptedRole(ply)
@@ -235,13 +237,13 @@ hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelBodyguard", DoppelBodyguard)
 hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelDoppel", DoppelDoppel)
 hook.Add("TTT2DoppelgangerRoleChange", "TTT2DoppelWrath", DoppelWrath)
 
-hook.Add("TTTBeginRound", "ResetForceDoppelTeam", ResetForceDoppelTeam)
-hook.Add("TTTPrepareRound", "ResetForceDoppelTeam", ResetForceDoppelTeam)
-hook.Add("TTTEndRound", "ResetForceDoppelTeam", ResetForceDoppelTeam)
-
-hook.Add("TTT2UpdateTeam", "ForceDoppelgangerTeam", ForceDoppelgangerTeam)
-hook.Add("TTT2UpdateTeam", "PirateDoppelTeam", PirateDoppelTeam)
-hook.Add("TTT2UpdateTeam", "BodyguardDoppelTeam", BodyguardDoppelTeam)
-hook.Add("TTT2UpdateTeam", "JackalSidekickDoppel", JackalSidekickDoppel)
-hook.Add("TTT2UpdateTeam", "ThrallDoppelTeam", ThrallDoppelTeam)
-hook.Add("TTT2UpdateTeam", "SidekickDoppelTeam", SidekickDoppelTeam)
+-- hook.Add("TTTBeginRound", "ResetForceDoppelTeam", ResetForceDoppelTeam)
+-- hook.Add("TTTPrepareRound", "ResetForceDoppelTeam", ResetForceDoppelTeam)
+-- hook.Add("TTTEndRound", "ResetForceDoppelTeam", ResetForceDoppelTeam)
+--
+-- hook.Add("TTT2UpdateTeam", "ForceDoppelgangerTeam", ForceDoppelgangerTeam)
+-- hook.Add("TTT2UpdateTeam", "PirateDoppelTeam", PirateDoppelTeam)
+-- hook.Add("TTT2UpdateTeam", "BodyguardDoppelTeam", BodyguardDoppelTeam)
+-- hook.Add("TTT2UpdateTeam", "JackalSidekickDoppel", JackalSidekickDoppel)
+-- hook.Add("TTT2UpdateTeam", "ThrallDoppelTeam", ThrallDoppelTeam)
+-- hook.Add("TTT2UpdateTeam", "SidekickDoppelTeam", SidekickDoppelTeam)

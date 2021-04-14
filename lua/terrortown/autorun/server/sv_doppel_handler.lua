@@ -1,4 +1,5 @@
 util.AddNetworkString("ttt2_dop_popup")
+
 local function DoppelChange(ply, key)
   if not DOPPELGANGER then return end
   if not IsValid(ply) or not ply:IsPlayer() then return end
@@ -14,13 +15,13 @@ local function DoppelChange(ply, key)
   if ply:GetNWFloat("ttt2_mim_trans_time", 0) ~= 0 then return end
 
   local mimic_data = {
-    ply = ply,
-    tgt = tgt,
-    role = tgt:GetSubRole(),
-    rolestring = tgt:GetRoleStringRaw(),
-    team = tgt:GetTeam(),
-    did_steal = true,
-    abort = false
+    ply = ply, --Doppel/Mimic stealing role
+    tgt = tgt, --Player whose role is getting stolen
+    role = tgt:GetSubRole(), --Role being stolen
+    rolestring = tgt:GetRoleStringRaw(), --Role's name, will be translated
+    team = tgt:GetTeam(), --Target's team
+    did_steal = true, --Does the role steal happen (ie will the target lose their role if that setting is enabled)
+    abort = false --Does the Doppel/Mimic become the targeted role (overrides did_steal)
   }
 
   local steal_mode = GetConVar("ttt2_mim_steal_role"):GetBool()
@@ -91,34 +92,34 @@ local function DoppelChange(ply, key)
 end
 hook.Add("KeyPress", "TTT2DoppelChange", DoppelChange)
 
-hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleDopMod", function(ply, tbl)
-  if GetRoundState() == ROUND_POST then return end
-  -- if ply:GetSubRoleData().unknownTeam then return end
-
-  local dopSelected = false
-
-  for dop in pairs(tbl) do
-    if dop:IsTerror() and dop:Alive() and dop:GetTeam() == TEAM_DOPPELGANGER and dop:GetSubRole() ~= ROLE_DOPPELGANGER and (not ply:GetSubRoleData().unknownTeam or dop:GetBaseRole() == ROLE_DETECTIVE) then
-      if dop ~= ply then
-        tbl[dop] = {dop:GetSubRole(), dop:GetSubRoleData().defaultTeam}
-      else
-        tbl[dop] = {dop:GetSubRole(), TEAM_DOPPELGANGER}
-      end
-      dopSelected = true
-    end
-  end
-
-  if dopSelected and ply:GetTeam() == TEAM_DOPPELGANGER then
-    for teammate in pairs(tbl) do
-      if teammate == ply then continue end
-      if teammate:GetTeam() == TEAM_DOPPELGANGER then continue end
-      if not teammate:IsTerror() or not teammate:Alive() then continue end
-      if teammate:HasTeam(ply:GetSubRoleData().defaultTeam) then
-        tbl[teammate] = {teammate:GetSubRole(), teammate:GetTeam()}
-      end
-    end
-  end
-end)
+-- hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleDopMod", function(ply, tbl)
+--   if GetRoundState() == ROUND_POST then return end
+--   -- if ply:GetSubRoleData().unknownTeam then return end
+--
+--   local dopSelected = false
+--
+--   for dop in pairs(tbl) do
+--     if dop:IsTerror() and dop:Alive() and dop:GetTeam() == TEAM_DOPPELGANGER and dop:GetSubRole() ~= ROLE_DOPPELGANGER and (not ply:GetSubRoleData().unknownTeam or dop:GetBaseRole() == ROLE_DETECTIVE) then
+--       if dop ~= ply then
+--         tbl[dop] = {dop:GetSubRole(), dop:GetSubRoleData().defaultTeam}
+--       else
+--         tbl[dop] = {dop:GetSubRole(), TEAM_DOPPELGANGER}
+--       end
+--       dopSelected = true
+--     end
+--   end
+--
+--   if dopSelected and ply:GetTeam() == TEAM_DOPPELGANGER then
+--     for teammate in pairs(tbl) do
+--       if teammate == ply then continue end
+--       if teammate:GetTeam() == TEAM_DOPPELGANGER then continue end
+--       if not teammate:IsTerror() or not teammate:Alive() then continue end
+--       if teammate:HasTeam(ply:GetSubRoleData().defaultTeam) then
+--         tbl[teammate] = {teammate:GetSubRole(), teammate:GetTeam()}
+--       end
+--     end
+--   end
+-- end)
 
 hook.Add("EntityTakeDamage", "DoppelgangerPreventDamage", function(ply, dmginfo)
   if not ply or not IsValid(ply) or not ply:IsPlayer() then return end
