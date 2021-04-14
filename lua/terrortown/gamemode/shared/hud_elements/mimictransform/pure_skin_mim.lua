@@ -83,7 +83,7 @@ if CLIENT then
     local color = MIMIC.color
     if not color then return end
 
-    if not client:IsActive() or not client:Alive() or client:GetBaseRole() ~= ROLE_MIMIC then return end
+    if not client:IsActive() or not client:Alive() or (client:GetSubRole() ~= ROLE_MIMIC and client:GetSubRole() ~= ROLE_DOPPELGANGER) then return end
     local start_time = client:GetNWFloat("ttt2_mim_trans_time", 0)
     local raw_rolestring = client:GetNWString("ttt2_mim_trans_rolestring")
     local rolestring = LANG.TryTranslation(raw_rolestring)

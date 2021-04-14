@@ -30,37 +30,53 @@ function ROLE:PreInitialize()
 end
 
 function ROLE:Initialize()
-  roles.SetBaseRole(self, ROLE_MIMIC)
+  -- roles.SetBaseRole(self, ROLE_MIMIC)
   if SERVER and JESTER then
     self.networkRoles = {JESTER}
   end
 end
 
-function CorrectDopPly(ply)
-  if not IsValid(ply) or ply:IsSpec() then return end
-  if ply:GetSubRole() ~= ROLE_DOPPELGANGER then return end
-  if ply:GetTeam() ~= TEAM_NONE then return end
-
-  ply:SetRole(ROLE_DOPPELGANGER, TEAM_DOPPELGANGER)
-end
-
-function CorrectDopTeam()
-  local GetPlayers = player.GetAll()
-  local count = #GetPlayers
-
-  for i = 1, count do
-    local ply = GetPlayers[i]
-    CorrectDopPly(ply)
-  end
-end
+-- function CorrectDopPly(ply)
+--   if not IsValid(ply) or ply:IsSpec() then return end
+--   if ply:GetSubRole() ~= ROLE_DOPPELGANGER then return end
+--   if ply:GetTeam() ~= TEAM_NONE then return end
+--
+--   ply:SetRole(ROLE_DOPPELGANGER, TEAM_DOPPELGANGER)
+-- end
+--
+-- function CorrectDopTeam()
+--   local GetPlayers = player.GetAll()
+--   local count = #GetPlayers
+--
+--   for i = 1, count do
+--     local ply = GetPlayers[i]
+--     CorrectDopPly(ply)
+--   end
+-- end
 
 if SERVER then
-  hook.Add("TTTBeginRound", "TTTCorrectDopTeam", CorrectDopTeam)
+  -- hook.Add("TTTBeginRound", "TTTCorrectDopTeam", CorrectDopTeam)
+  -- hook.Add("TTT2UpdateSubrole", "DoppelRoleChange", function(ply, old, new)
+  --   if new == ROLE_DOPPELGANGER then
+  --     CorrectDopPly(ply)
+  --   end
+  -- end)
+
   hook.Add("TTT2UpdateSubrole", "DoppelRoleChange", function(ply, old, new)
     if new == ROLE_DOPPELGANGER then
-      CorrectDopPly(ply)
+      ply:SetNWBool("isForceDoppelganger", true)
     end
   end)
+
+  local function ResetDoppelForce()
+    local plys = player.GetAll()
+    for i = 1, #plys do
+      plys[i]:SetNWBool("isForceDoppelganger", false)
+    end
+  end
+
+  hook.Add("TTTEndRound", "TTTResetDoppelForce", ResetDoppelForce)
+  hook.Add("TTTPrepareRound", "TTTResetDoppelForce", ResetDoppelForce)
 
   local function PrepareDoppelCorpse(ply)
     if not ply or not IsValid(ply) or not ply:IsPlayer() then return end
