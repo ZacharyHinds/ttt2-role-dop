@@ -22,19 +22,19 @@ if SERVER then
     for dop in pairs(tbl) do
       if dop:IsTerror() and dop:Alive() and dop:GetTeam() == TEAM_DOPPELGANGER then
         local doppel_sync = CreateDoppelSync(dop, ply)
-        if ply ~= dop and ((not ply:GetSubRoleData().unknownTeam and ply:HasTeam(doppel_sync.team)) or doppel_sync.public) then
+        if ply ~= dop and ((not ply:GetSubRoleData().unknownTeam and ply:GetTeam() == doppel_sync.team) or doppel_sync.public) then
           tbl[dop] = {doppel_sync.subrole, doppel_sync.team}
         end
       end
     end
 
-    if not ply:HasTeam(TEAM_DOPPELGANGER) then return end
+    if not ply:GetTeam() == TEAM_DOPPELGANGER then return end
     local doppel_sync = CreateDoppelSync(ply)
     for teammate in pairs(tbl) do
       if teammate == ply then continue end
-      if teammate:HasTeam(TEAM_DOPPELGANGER) then continue end
+      if teammate:GetTeam() == TEAM_DOPPELGANGER then continue end
       if not teammate:IsTerror() or not teammate:Alive() then continue end
-      if teammate:HasTeam(doppel_sync.team) and doppel_sync.know_team then
+      if teammate:GetTeam() == doppel_sync.team and doppel_sync.know_team then
         tbl[teammate] = {teammate:GetSubRole(), teammate:GetTeam()}
       end
     end

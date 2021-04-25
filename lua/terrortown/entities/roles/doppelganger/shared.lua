@@ -80,7 +80,7 @@ if SERVER then
 
   local function PrepareDoppelCorpse(ply)
     if not ply or not IsValid(ply) or not ply:IsPlayer() then return end
-    if not ply:HasTeam(TEAM_DOPPELGANGER) then return end
+    if not ply:GetTeam() == TEAM_DOPPELGANGER then return end
     if not GetConVar("ttt2_dop_corpse_indicator"):GetBool() then return end
 
     net.Start("ttt2_dop_corpse_update")
