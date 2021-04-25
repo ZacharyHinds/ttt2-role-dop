@@ -113,7 +113,7 @@ hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleDopMod", function(ply, tbl)
       if teammate == ply then continue end
       if teammate:GetTeam() == TEAM_DOPPELGANGER then continue end
       if not teammate:IsTerror() or not teammate:Alive() then continue end
-      if teammate:HasTeam(ply:GetSubRoleData().defaultTeam) then
+      if teammate:GetTeam() == ply:GetSubRoleData().defaultTeam then
         tbl[teammate] = {teammate:GetSubRole(), teammate:GetTeam()}
       end
     end
