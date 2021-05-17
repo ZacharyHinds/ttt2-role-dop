@@ -29,3 +29,8 @@ L["ttt_dop_was_dop"] = "This person was actually a Doppelganger in disguise!"
 -- L["ttt2_dop_replace_role_1"] = "Victim becomes Amnesiac"
 -- L["ttt2_dop_replace_role_2"] = "Victim becomes Unkown"
 -- L["ttt2_dop_replace_role_3"] = "Victim becomes Mimic"
+
+--EVENT STRING
+L["title_role_steal_dop"] = "A Doppelganger stole a role"
+L["desc_role_steal"] = "{nick} stole {victim}'s role."
+L["desc_role_copy"] = "{nick} copied {victim}'s role."

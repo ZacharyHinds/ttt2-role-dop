@@ -10,3 +10,6 @@ L["ttt2_desc_" .. MIMIC.name] = [[The Mimic copies someone's role and joins thei
 
 -- OTHER ROLE LANGUAGE STRINGS
 L["ttt2_mim_transform"] = "Transforming into {role}"
+
+-- EVENT STRINGS
+L["title_role_steal_mim"] = "A Mimic stole a role"

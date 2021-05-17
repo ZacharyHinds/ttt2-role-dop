@@ -36,6 +36,7 @@ local function DoppelChange(ply, key)
   local delay = GetConVar("ttt2_dop_steal_delay"):GetInt()
   ply:SetNWFloat("ttt2_mim_trans_time", CurTime())
   ply:SetNWString("ttt2_mim_trans_rolestring", mimic_data.rolestring)
+
   timer.Simple(delay, function()
     local invuln_time = 0
     if ply:GetSubRole() == ROLE_MIMIC then
@@ -43,6 +44,13 @@ local function DoppelChange(ply, key)
     else
       invuln_time = GetConVar("ttt2_dop_grace_time"):GetInt() + CurTime()
     end
+
+    if ply:GetSubRole() == ROLE_DOPPELGANGER then
+      events.Trigger(EVENT_ROLE_STEAL_DOP, ply, tgt, steal_mode and mimic_data.did_steal)
+    else
+      events.Trigger(EVENT_ROLE_STEAL_MIM, ply, tgt, steal_mode and mimic_data.did_steal)
+    end
+
     ply:SetRole(mimic_data.role, mimic_data.team)
     SendFullStateUpdate()
     ply:UpdateTeam(mimic_data.team)
