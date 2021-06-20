@@ -30,7 +30,6 @@ function ROLE:PreInitialize()
 end
 
 function ROLE:Initialize()
-  roles.SetBaseRole(self, ROLE_MIMIC)
   if SERVER and JESTER then
     self.networkRoles = {JESTER}
   end
@@ -64,7 +63,7 @@ if SERVER then
 
   local function PrepareDoppelCorpse(ply)
     if not ply or not IsValid(ply) or not ply:IsPlayer() then return end
-    if not ply:GetTeam() == TEAM_DOPPELGANGER then return end
+    if ply:GetTeam() ~= TEAM_DOPPELGANGER then return end
     if not GetConVar("ttt2_dop_corpse_indicator"):GetBool() then return end
 
     net.Start("ttt2_dop_corpse_update")
