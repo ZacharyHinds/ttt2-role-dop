@@ -16,6 +16,8 @@ function ROLE:PreInitialize()
   self.surviveBonus = 1
   self.scoreKillsMultiplier = 5
   self.scoreTeamKillsMultiplier = -16
+  
+  self.isOmniscientRole = true
 
   self.defaultTeam = TEAM_DOPPELGANGER
   self.defaultEquipment = SPECIAL_EQUIPMENT
