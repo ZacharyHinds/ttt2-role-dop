@@ -99,8 +99,10 @@ hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleDopMod", function(ply, tbl)
 
   for dop in pairs(tbl) do
     if dop:IsTerror() and dop:Alive() and dop:GetTeam() == TEAM_DOPPELGANGER and dop:GetSubRole() ~= ROLE_DOPPELGANGER and (not ply:GetSubRoleData().unknownTeam or dop:GetBaseRole() == ROLE_DETECTIVE) then
-      if dop ~= ply then
+      if dop:GetSubRoleData().defaultTeam == ply:GetTeam() then
         tbl[dop] = {dop:GetSubRole(), dop:GetSubRoleData().defaultTeam}
+      elseif dop ~= ply then
+        tbl[dop] = {ROLE_NONE, TEAM_NONE}               
       else
         tbl[dop] = {dop:GetSubRole(), TEAM_DOPPELGANGER}
       end
@@ -111,9 +113,11 @@ hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleDopMod", function(ply, tbl)
   if dopSelected and ply:GetTeam() == TEAM_DOPPELGANGER then
     for teammate in pairs(tbl) do
       if teammate == ply then continue end
-      if teammate:GetTeam() == TEAM_DOPPELGANGER then continue end
       if not teammate:IsTerror() or not teammate:Alive() then continue end
-      if teammate:GetTeam() == ply:GetSubRoleData().defaultTeam then
+      if teammate:GetTeam() == TEAM_DOPPELGANGER then 
+        tbl[teammate] = {ROLE_DOPPELGANGER, TEAM_DOPPELGANGER}
+        continue
+      elseif teammate:GetTeam() == ply:GetSubRoleData().defaultTeam then
         tbl[teammate] = {teammate:GetSubRole(), teammate:GetTeam()}
       end
     end
